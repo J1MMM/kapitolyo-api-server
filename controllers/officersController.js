@@ -1,15 +1,4 @@
-const bcrypt = require("bcrypt");
-const Class = require("../model/Class");
-const User = require("../model/User");
-const Lesson = require("../model/Lesson");
-const Student = require("../model/Student");
-const { storage } = require("../config/firebase.config");
-const { ref, deleteObject } = require("firebase/storage");
-const nodeMailer = require("nodemailer");
-const ROLES_LIST = require("../config/roles_list");
 const Officer = require("../model/Officer");
-const ViolationList = require("../model/ViolationList");
-const cron = require("cron");
 
 const resetOfficerApprehension = async () => {
   try {
@@ -18,14 +7,6 @@ const resetOfficerApprehension = async () => {
     console.log(error);
   }
 };
-
-const job = new cron.CronJob(
-  "0 0 0 * * 1", // cronTime
-  resetOfficerApprehension, // onTick
-  null, // onComplete
-  true, // start
-  "Asia/Manila" // timeZone
-);
 
 const getAllOfficer = async (req, res) => {
   try {
