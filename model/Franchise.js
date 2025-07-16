@@ -217,6 +217,14 @@ const franchiseSchema = new Schema({
     type: String,
     required: false,
   },
+  fromAction: {
+    type: String,
+    required: false,
+  },
+  archivedBy: {
+    type: String,
+    required: false,
+  },
 });
 
 module.exports = mongoose.model("Franchise", franchiseSchema);
