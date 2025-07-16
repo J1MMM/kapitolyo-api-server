@@ -217,7 +217,7 @@ const franchiseSchema = new Schema({
     type: String,
     required: false,
   },
-  fromAction: {
+  actionFrom: {
     type: String,
     required: false,
   },
