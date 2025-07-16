@@ -30,12 +30,6 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "/public")));
 
 //routes
-app.use("/", require("./routes/root"));
-app.use("/franchise", require("./routes/api/franchise"));
-app.use("/officers", require("./routes/api/officers"));
-app.use("/ticket", require("./routes/api/ticket"));
-app.use("/violation", require("./routes/api/violation"));
-
 app.use("/auth", require("./routes/api/auth"));
 app.use("/refresh", require("./routes/api/refresh"));
 app.use("/logout", require("./routes/api/logout"));
@@ -44,6 +38,11 @@ app.use("/reset-password", require("./routes/api/resetPassword"));
 // protected routes
 app.use(verifyJWT);
 app.use("/users", require("./routes/api/users"));
+app.use("/", require("./routes/root"));
+app.use("/franchise", require("./routes/api/franchise"));
+app.use("/officers", require("./routes/api/officers"));
+app.use("/ticket", require("./routes/api/ticket"));
+app.use("/violation", require("./routes/api/violation"));
 
 // 404
 app.all("*", (req, res) => {
