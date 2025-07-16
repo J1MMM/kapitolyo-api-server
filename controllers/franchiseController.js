@@ -162,7 +162,12 @@ const archiveFranchise = async (req, res) => {
   try {
     const updatedFranchise = await Franchise.findByIdAndUpdate(
       id,
-      { isArchived: true, DATE_ARCHIVED: datenow },
+      {
+        isArchived: true,
+        DATE_ARCHIVED: datenow,
+        archivedBy: req?.fullname,
+        actionFrom: "revoke",
+      },
       { new: true } // To return the updated document
     );
 
