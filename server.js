@@ -7,14 +7,12 @@ const cors = require("cors");
 const connectDB = require("./config/connectDB");
 const errorHandler = require("./middleware/errorHandler");
 const corsOption = require("./config/corsOptions");
-const { logger, logEvents } = require("./middleware/logEvents");
+const { logger } = require("./middleware/logEvents");
 const verifyJWT = require("./middleware/verifyJWT");
 const cookieParser = require("cookie-parser");
 const credentials = require("./middleware/credentials");
-const multer = require("multer");
 
 const PORT = process.env.PORT || 3500;
-const upload = multer({ storage: multer.memoryStorage() });
 // connect to mongooDB
 connectDB();
 // custom middleware
