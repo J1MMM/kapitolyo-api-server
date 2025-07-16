@@ -930,6 +930,8 @@ const pendingFranchisePayment = async (req, res) => {
         {
           isArchived: true,
           DATE_ARCHIVED: dateNow,
+          actionFrom: "transfer",
+          archivedBy: req?.fullname,
         }
       );
 
