@@ -3,6 +3,7 @@ const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
 const Franchise = require("../model/Franchise");
 const PendingFranchise = require("../model/PendingFranchise");
+const { logSystemAction } = require("./LogsController");
 // Set the timezone to UTC
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -130,7 +131,6 @@ const getAllFranchise = async (req, res) => {
     const totalRows = await Franchise.countDocuments({ isArchived: false });
 
     // Send the paginated data along with total record count
-
     res.json({
       rows,
       totalRows,
@@ -149,8 +149,25 @@ const getAllArchived = async (req, res) => {
       DATE_ARCHIVED: "desc",
     });
     const totalRows = await Franchise.countDocuments();
+
+    await logSystemAction({
+      action: "FETCH_ARCHIVED_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: "All Archived Franchises",
+      module: "Archived Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json({ rows, totalRows });
   } catch (err) {
+    await logSystemAction({
+      action: "FETCH_ARCHIVED_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: "All Archived Franchises",
+      module: "Archived Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -174,8 +191,25 @@ const archiveFranchise = async (req, res) => {
     if (!updatedFranchise) {
       return res.status(404).json({ message: "Franchise not found" });
     }
+
+    await logSystemAction({
+      action: "ARCHIVE_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json(updatedFranchise);
   } catch (error) {
+    await logSystemAction({
+      action: "ARCHIVE_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error updating franchise:", error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -203,10 +237,24 @@ const getAllAvailableMTOPs = async (req, res) => {
 
     // Find the missing MTOP numbers by filtering out the used MTOP numbers
     const missingMTOPs = allMTOPs.filter((MTOP) => !allUsedMtop.includes(MTOP));
-
+    await logSystemAction({
+      action: "FETCH_AVAILABLE_MTOPS",
+      performedBy: req?.fullname || "unknown",
+      target: "Available MTOPs",
+      module: "Dashboard",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     // Return the array of missing MTOP numbers as JSON response
     return res.json(missingMTOPs);
   } catch (error) {
+    await logSystemAction({
+      action: "FETCH_AVAILABLE_MTOPS",
+      performedBy: req?.fullname || "unknown",
+      target: "Available MTOPs",
+      module: "Dashboard",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error getting missing MTOPs:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
@@ -329,8 +377,24 @@ const addNewFranchise = async (req, res) => {
       collectingOfficer: franchiseDetails?.collectingOfficer,
     });
 
+    await logSystemAction({
+      action: "ADD_NEW_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${newFranchise._id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.status(201).json(latestRefNo);
   } catch (error) {
+    await logSystemAction({
+      action: "ADD_NEW_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${req.body?.id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error adding new franchise:", error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -464,8 +528,24 @@ const handleFranchiseTransfer = async (req, res) => {
       newToda: franchiseDetails.newToda,
     });
 
+    await logSystemAction({
+      action: "TRANSFER_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${newFranchise._id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.status(201).json({ refNo, receiptData });
   } catch (error) {
+    await logSystemAction({
+      action: "TRANSFER_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${req.body?.id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error transfering franchise:", error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -733,8 +813,24 @@ const handleFranchiseUpdate = async (req, res) => {
     foundFranchise.processedBy = franchiseDetails?.processedBy;
     await foundFranchise.save();
 
+    await logSystemAction({
+      action: "FRANCHISE_RENEWAL",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${franchiseDetails?.id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json({ refNo, receiptData });
   } catch (error) {
+    await logSystemAction({
+      action: "FRANCHISE_RENEWAL",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${req.body?.id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error updating franchise:", error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -795,6 +891,14 @@ const getAnalytics = async (req, res) => {
       isArchived: false,
     });
 
+    await logSystemAction({
+      action: "GET_ANALYTICS",
+      performedBy: req?.fullname || "unknown",
+      target: "FRANCHISE OVERVIEW",
+      module: "DASHBOARD",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json({
       franchises: franchises,
       recentlyAdded: recentlyAdded,
@@ -802,6 +906,14 @@ const getAnalytics = async (req, res) => {
       franchiseAnalytics: dailyFranchiseAnalytics,
     });
   } catch (err) {
+    await logSystemAction({
+      action: "GET_ANALYTICS",
+      performedBy: req?.fullname || "unknown",
+      target: "FRANCHISE OVERVIEW",
+      module: "DASHBOARD",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -810,9 +922,23 @@ const getAnalytics = async (req, res) => {
 const getFranchisePending = async (req, res) => {
   try {
     const result = await PendingFranchise.find({ isArchived: false });
-
+    await logSystemAction({
+      action: "FETCH_ALL_PENDING_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: `ALL PENDING FRANCHISES`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(result);
   } catch (err) {
+    await logSystemAction({
+      action: "FETCH_ALL_PENDING_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: `ALL PENDING FRANCHISES`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -823,9 +949,23 @@ const getFranchisePendingPaid = async (req, res) => {
     const result = await PendingFranchise.find({ isArchived: true }).sort({
       refNo: "desc",
     });
-
+    await logSystemAction({
+      action: "FETCH_ALL_PAID_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: `ALL PAID FRANCHISES`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(result);
   } catch (err) {
+    await logSystemAction({
+      action: "FETCH_ALL_PAID_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: `ALL PAID FRANCHISES`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -947,16 +1087,33 @@ const pendingFranchisePayment = async (req, res) => {
     foundPending.paymentOrDate = paymentOrDate;
     foundPending.collectingOfficer = franchiseDetails?.collectingOfficer;
     await foundPending.save();
+
+    await logSystemAction({
+      action: "FRANCHISE_PAYMENT",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${franchiseDetails?.id}`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json({ newFranchiseData, receiptData: foundPending?.receiptData });
   } catch (err) {
+    await logSystemAction({
+      action: "FRANCHISE_PAYMENT",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${req.body?.id}`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const cancelOR = async (req, res) => {
+  const franchiseDetails = req.body;
   try {
-    const franchiseDetails = req.body;
     if (!franchiseDetails)
       return res
         .status(400)
@@ -975,17 +1132,31 @@ const cancelOR = async (req, res) => {
     }
 
     await PendingFranchise.deleteOne({ previousVersion: franchiseDetails.id });
-
+    await logSystemAction({
+      action: "CANCEL_OR",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${franchiseDetails?.id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json({ message: "ok" });
   } catch (err) {
+    await logSystemAction({
+      action: "CANCEL_OR",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${franchiseDetails?.id}`,
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const cashierCancelPending = async (req, res) => {
+  const franchiseDetails = req.body;
   try {
-    const franchiseDetails = req.body;
     if (!franchiseDetails)
       return res
         .status(400)
@@ -1004,8 +1175,22 @@ const cashierCancelPending = async (req, res) => {
     }
 
     await PendingFranchise.findByIdAndDelete(franchiseDetails.id);
-
+    await logSystemAction({
+      action: "CANCEL_OR_PENDING_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${franchiseDetails?.id}`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json({ message: "ok" });
+    await logSystemAction({
+      action: "CANCEL_OR_PENDING_FRANCHISE",
+      performedBy: req?.fullname || "unknown",
+      target: `Franchise ID: ${franchiseDetails?.id}`,
+      module: "CASHIER",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
   } catch (err) {
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Internal server error" });
@@ -1220,6 +1405,15 @@ const fetchFranchise = async (req, res) => {
     const totalRows = await Franchise.countDocuments(filterQuery);
 
     // Send the filtered data along with the total record count
+
+    await logSystemAction({
+      action: "FETCH_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF FRANCHISES",
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json({
       rows,
       totalRows,
@@ -1227,7 +1421,23 @@ const fetchFranchise = async (req, res) => {
       totalPages: Math.ceil(totalRows / pageSize),
     });
   } catch (err) {
+    await logSystemAction({
+      action: "FETCH_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF FRANCHISES",
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Error fetching data:", err);
+    await logSystemAction({
+      action: "FETCH_FRANCHISES",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF FRANCHISES",
+      module: "Franchise",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     res.status(500).json({ message: "Internal server error" });
   }
 };

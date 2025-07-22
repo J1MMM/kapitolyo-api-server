@@ -41,6 +41,7 @@ app.use("/franchise", require("./routes/api/franchise"));
 app.use("/officers", require("./routes/api/officers"));
 app.use("/ticket", require("./routes/api/ticket"));
 app.use("/violation", require("./routes/api/violation"));
+app.use("/logs", require("./routes/api/logs"));
 
 // 404
 app.all("*", (req, res) => {

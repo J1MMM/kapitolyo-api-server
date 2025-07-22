@@ -5,6 +5,7 @@ const Franchise = require("../model/Franchise");
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
+const { logSystemAction } = require("./LogsController");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -44,8 +45,23 @@ const getViolationList = async (req, res) => {
   try {
     const result = await ViolationList.find();
     if (!result) return res.status(204).json({ message: "Empty List" });
+    await logSystemAction({
+      action: "FETCH_VIOLATION_LIST",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF VIOLATION",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(result);
   } catch (error) {
+    await logSystemAction({
+      action: "FETCH_VIOLATION_LIST",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF VIOLATION",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     res.status(400).json({ message: error.message });
   }
 };
@@ -55,8 +71,23 @@ const getViolations = async (req, res) => {
     const result = await Violation.find({ paid: false }).sort({ _id: "desc" });
 
     if (!result) return res.status(204).json({ message: "Empty List" });
+    await logSystemAction({
+      action: "FETCH_VIOLATIONS",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF ALL VIOLATIONS",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(result);
   } catch (error) {
+    await logSystemAction({
+      action: "FETCH_VIOLATIONS",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF ALL VIOLATIONS",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     res.status(400).json({ message: error.message });
   }
 };
@@ -105,8 +136,24 @@ const addViolator = async (req, res) => {
       }
     }
 
+    await logSystemAction({
+      action: "ADD_VIOLATION",
+      performedBy: req?.fullname || "unknown",
+      target: `Violation ID: ${newViolator._id}` || "unknown",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.status(201).json(newViolator);
   } catch (error) {
+    await logSystemAction({
+      action: "ADD_VIOLATION",
+      performedBy: req?.fullname || "unknown",
+      target: `Violation Ticket No: ${violationDetails?.ticketNo}` || "unknown",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.log(error);
     res.status(400).json({ message: error.message });
   }
@@ -225,8 +272,24 @@ const updateViolation = async (req, res) => {
     await prevViolationDetails.set(violationDetails);
     await prevViolationDetails.save();
 
+    await logSystemAction({
+      action: "UPDATE_VIOLATION",
+      performedBy: req?.fullname || "unknown",
+      target: `Violation ID: ${prevViolationDetails._id}` || "unknown",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.status(201).json(prevViolationDetails);
   } catch (error) {
+    await logSystemAction({
+      action: "UPDATE_VIOLATION",
+      performedBy: req?.fullname || "unknown",
+      target: `Violation ID: ${violationDetails._id}` || "unknown",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error(error);
     res.status(400).json({ message: error.message });
   }
@@ -237,8 +300,23 @@ const getViolationsPaid = async (req, res) => {
     const result = await Violation.find({ paid: true }).sort({ _id: "desc" });
 
     if (!result) return res.status(204).json({ message: "Empty List" });
+    await logSystemAction({
+      action: "FETCH_VIOLATIONS_PAID",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF PAID VIOLATIONS",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(result);
   } catch (error) {
+    await logSystemAction({
+      action: "FETCH_VIOLATIONS_PAID",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF PAID VIOLATIONS",
+      module: "Violation",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     res.status(400).json({ message: error.message });
   }
 };
@@ -295,8 +373,24 @@ const updateViolationPaidStatus = async (req, res) => {
       { new: true }
     );
     if (!updatedViolation) return res.sendStatus(400);
+
+    await logSystemAction({
+      action: "UPDATE_VIOLATION_PAID_STATUS",
+      performedBy: req?.fullname || "unknown",
+      target: "Violation ID: " + violationDetails._id || "unknown",
+      module: "Violation Paidlist",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.sendStatus(201);
   } catch (error) {
+    await logSystemAction({
+      action: "UPDATE_VIOLATION_PAID_STATUS",
+      performedBy: req?.fullname || "unknown",
+      target: "Violation ID: " + violationDetails._id || "unknown",
+      module: "Violation Paidlist",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     res.status(400).json({ message: error.message });
   }
 };
@@ -368,6 +462,14 @@ const violationsAnalytics = async (req, res) => {
     const unregisteredPercentageResult = isNaN(unregisteredPercentage)
       ? 0
       : unregisteredPercentage;
+
+    await logSystemAction({
+      action: "VIOLATIONS_ANALYTICS",
+      performedBy: req?.fullname || "unknown",
+      target: "VIOLATIONS ANALYTICS",
+      module: "Dashboard",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json({
       registered,
       unregistered,
@@ -380,6 +482,14 @@ const violationsAnalytics = async (req, res) => {
       ],
     });
   } catch (error) {
+    await logSystemAction({
+      action: "VIOLATIONS_ANALYTICS",
+      performedBy: req?.fullname || "unknown",
+      target: "VIOLATIONS ANALYTICS",
+      module: "Dashboard",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.log(error.message);
     res.status(400).json({ message: error.message });
   }

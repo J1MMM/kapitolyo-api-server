@@ -1,13 +1,29 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/User");
 const ROLES_LIST = require("../config/roles_list");
+const { logSystemAction } = require("./LogsController");
 
 const getAllUsers = async (req, res) => {
   try {
     const result = await User.find();
     if (!result) return res.status(204).json({ message: "No students found" });
+    await logSystemAction({
+      action: "FETCH_USERS",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF USERS",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(result);
   } catch (error) {
+    await logSystemAction({
+      action: "FETCH_USERS",
+      performedBy: req?.fullname || "unknown",
+      target: "LIST OF USERS",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     res.status(400).json({ message: error.message });
   }
 };
@@ -47,11 +63,27 @@ const createUser = async (req, res) => {
       roles: { [accountDetails.role]: ROLES_LIST[accountDetails.role] },
     });
 
+    await logSystemAction({
+      action: "CREATE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: "New User",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.status(201).json({
       success: `New user ${accountDetails.fname} has been created successfully!`,
       result,
     });
   } catch (error) {
+    await logSystemAction({
+      action: "CREATE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: "New User",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     res.status(400).json({ message: error.message });
   }
 };
@@ -90,8 +122,24 @@ const updateUser = async (req, res) => {
       user.roles = { [req.body.role]: ROLES_LIST[req.body.role] };
 
     const result = await user.save();
+
+    await logSystemAction({
+      action: "UPDATE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${req.body.id}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json({ success: "User updated successfully!", result });
   } catch (error) {
+    await logSystemAction({
+      action: "UPDATE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${req.body.id}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.log(error);
     res.status(400).json({ message: error.message });
   }
@@ -104,16 +152,31 @@ const deleteUser = async (req, res) => {
   try {
     await User.deleteMany({ _id: { $in: idsToDelete } });
     const result = await User.find();
+    await logSystemAction({
+      action: "DELETE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${idsToDelete}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(result);
   } catch (error) {
+    await logSystemAction({
+      action: "DELETE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${idsToDelete}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
 
 const archiveUser = async (req, res) => {
-  const { idsToDelete, toAchive } = req.body;
-  if (!idsToDelete || !req.id)
+  const { idsToDelete: selectedIDs, toAchive } = req.body;
+  if (!selectedIDs || !req.id)
     return res.status(400).json({ message: "id's are required" });
 
   const updateOperation = {
@@ -123,11 +186,27 @@ const archiveUser = async (req, res) => {
   };
 
   try {
-    await User.updateMany({ _id: { $in: idsToDelete } }, updateOperation);
+    await User.updateMany({ _id: { $in: selectedIDs } }, updateOperation);
     const users = await User.find();
+
+    await logSystemAction({
+      action: "ARCHIVE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${selectedIDs}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
 
     res.json(users);
   } catch (error) {
+    await logSystemAction({
+      action: "ARCHIVE_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${selectedIDs}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.log(error.message);
     res.status(400).json({ message: error.message });
   }
@@ -140,8 +219,24 @@ const getUser = async (req, res) => {
   try {
     const user = await User.findOne({ _id: id });
     if (!user) return res.sendStatus(204);
+
+    await logSystemAction({
+      action: "GET_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${id}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json(user);
   } catch (err) {
+    await logSystemAction({
+      action: "GET_USER",
+      performedBy: req?.fullname || "unknown",
+      target: `User ID: ${id}` || "unknown",
+      module: "User Management",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error(err);
   }
 };

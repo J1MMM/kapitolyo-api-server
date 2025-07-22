@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/User");
+const { logSystemAction } = require("./LogsController");
 
 const handleRefreshToken = async (req, res) => {
   const cookies = req.cookies;
@@ -14,24 +15,36 @@ const handleRefreshToken = async (req, res) => {
   const email = foundUser.email;
   const id = foundUser._id;
   // evaluate jwt
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    if (err || decoded.email !== foundUser.email) return res.sendStatus(403);
-    const roles = Object.values(foundUser.roles);
-    const accessToken = jwt.sign(
-      {
-        UserInfo: {
-          id: id,
-          email: decoded.email,
-          roles: roles,
-          fullname: fullname,
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    async (err, decoded) => {
+      if (err || decoded.email !== foundUser.email) return res.sendStatus(403);
+      const roles = Object.values(foundUser.roles);
+      const accessToken = jwt.sign(
+        {
+          UserInfo: {
+            id: id,
+            email: decoded.email,
+            roles: roles,
+            fullname: fullname,
+          },
         },
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "7d" }
-    );
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "7d" }
+      );
 
-    res.json({ accessToken, roles, fullname, email });
-  });
+      await logSystemAction({
+        action: "USER_REFRESH",
+        performedBy: fullname || "unknown",
+        target: "REFRESH_TOKEN",
+        module: "Refresh",
+        ip: req.ip || req.headers.origin || "unknown",
+      });
+
+      res.json({ accessToken, roles, fullname, email });
+    }
+  );
 };
 
 module.exports = { handleRefreshToken };

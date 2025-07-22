@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../model/User");
+const { logSystemAction } = require("./LogsController");
 
 const handleLogin = async (req, res) => {
   const { email, pwd } = req.body;
@@ -13,12 +14,30 @@ const handleLogin = async (req, res) => {
       email: email,
       archive: false,
     }).exec();
-    if (!foundUser)
+    if (!foundUser) {
+      await logSystemAction({
+        action: "USER_LOGIN",
+        performedBy: email || "unknown",
+        target: "AUTHENTICATION",
+        module: "Login",
+        ip: req.ip || req.headers.origin || "unknown",
+        status: "FAILED",
+      });
       return res.status(401).json({ message: "Unauthorized: User not found" });
+    }
 
     const match = await bcrypt.compare(pwd, foundUser.password);
-    if (!match)
+    if (!match) {
+      await logSystemAction({
+        action: "USER_LOGIN",
+        performedBy: email || "unknown",
+        target: "AUTHENTICATION",
+        module: "Login",
+        ip: req.ip || req.headers.origin || "unknown",
+        status: "FAILED",
+      });
       return res.status(401).json({ message: "Incorrect email or password" });
+    }
 
     const roles = Object.values(foundUser.roles).filter(Boolean);
     const fullname = `${foundUser.firstname} ${foundUser.lastname}`;
@@ -54,8 +73,24 @@ const handleLogin = async (req, res) => {
       secure: isProduction, // Secure cookie only in production
     });
 
+    await logSystemAction({
+      action: "USER_LOGIN",
+      performedBy: email || "unknown",
+      target: "AUTHENTICATION",
+      module: "Login",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json({ roles, accessToken, fullname });
   } catch (error) {
+    await logSystemAction({
+      action: "USER_LOGIN",
+      performedBy: email || "unknown",
+      target: "AUTHENTICATION",
+      module: "Login",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.error("Login Error: ", error);
     res.status(500).json({ message: "Internal server error" });
   }

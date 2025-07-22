@@ -2,6 +2,7 @@ const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+const { logSystemAction } = require("./LogsController");
 
 const sendMail = async (req, res) => {
   const { email } = req.body.data;
@@ -76,8 +77,24 @@ const sendMail = async (req, res) => {
       html: html,
     });
 
+    await logSystemAction({
+      action: "SEND_RESET_EMAIL",
+      performedBy: "unknown",
+      target: `Email: ${email}` || "unknown",
+      module: "Reset Password",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
+
     res.json({ message: `We've sent password reset link to: ${email}` });
   } catch (err) {
+    await logSystemAction({
+      action: "SEND_RESET_EMAIL",
+      performedBy: "unknown",
+      target: `Email: ${email}` || "unknown",
+      module: "Reset Password",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.log(err);
   }
 };
@@ -114,8 +131,23 @@ const updatePwd = async (req, res) => {
 
     if (pwd) foundUser.password = hashedPwd;
     await foundUser.save();
+    await logSystemAction({
+      action: "UPDATE_PASSWORD",
+      performedBy: "unknown",
+      target: `User ID: ${foundUser._id}` || "unknown",
+      module: "Reset Password",
+      ip: req.ip || req.headers.origin || "unknown",
+    });
     res.json({ message: "Your password has been changed successfully." });
   } catch (err) {
+    await logSystemAction({
+      action: "UPDATE_PASSWORD",
+      performedBy: "unknown",
+      target: `User ID: ${foundUser._id}` || "unknown",
+      module: "Reset Password",
+      ip: req.ip || req.headers.origin || "unknown",
+      status: "FAILED",
+    });
     console.log(err);
     res.json({ message: err.message });
   }
