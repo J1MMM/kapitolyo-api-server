@@ -82,7 +82,7 @@ const sendMail = async (req, res) => {
       performedBy: "unknown",
       target: `Email: ${email}` || "unknown",
       module: "Reset Password",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json({ message: `We've sent password reset link to: ${email}` });
@@ -92,7 +92,7 @@ const sendMail = async (req, res) => {
       performedBy: "unknown",
       target: `Email: ${email}` || "unknown",
       module: "Reset Password",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(err);
@@ -136,7 +136,7 @@ const updatePwd = async (req, res) => {
       performedBy: "unknown",
       target: `User ID: ${foundUser._id}` || "unknown",
       module: "Reset Password",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.json({ message: "Your password has been changed successfully." });
   } catch (err) {
@@ -145,7 +145,7 @@ const updatePwd = async (req, res) => {
       performedBy: "unknown",
       target: `User ID: ${foundUser._id}` || "unknown",
       module: "Reset Password",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(err);

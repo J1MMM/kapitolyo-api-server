@@ -20,8 +20,8 @@ const handleLogin = async (req, res) => {
         performedBy: email || "unknown",
         target: "AUTHENTICATION",
         module: "Login",
-        ip: req.ip || req.headers.origin || "unknown",
-        status: "FAILED",
+        ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+        status: "WARNING",
       });
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }
@@ -33,8 +33,8 @@ const handleLogin = async (req, res) => {
         performedBy: email || "unknown",
         target: "AUTHENTICATION",
         module: "Login",
-        ip: req.ip || req.headers.origin || "unknown",
-        status: "FAILED",
+        ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+        status: "WARNING",
       });
       return res.status(401).json({ message: "Incorrect email or password" });
     }
@@ -78,7 +78,7 @@ const handleLogin = async (req, res) => {
       performedBy: email || "unknown",
       target: "AUTHENTICATION",
       module: "Login",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json({ roles, accessToken, fullname });
@@ -88,7 +88,7 @@ const handleLogin = async (req, res) => {
       performedBy: email || "unknown",
       target: "AUTHENTICATION",
       module: "Login",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Login Error: ", error);

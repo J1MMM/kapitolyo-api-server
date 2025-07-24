@@ -12,7 +12,7 @@ const getAllUsers = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF USERS",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (error) {
@@ -21,7 +21,7 @@ const getAllUsers = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF USERS",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(400).json({ message: error.message });
@@ -68,7 +68,7 @@ const createUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "New User",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.status(201).json({
@@ -81,7 +81,7 @@ const createUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "New User",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(400).json({ message: error.message });
@@ -128,7 +128,7 @@ const updateUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${req.body.id}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.json({ success: "User updated successfully!", result });
   } catch (error) {
@@ -137,7 +137,7 @@ const updateUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${req.body.id}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);
@@ -157,7 +157,7 @@ const deleteUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${idsToDelete}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (error) {
@@ -166,7 +166,7 @@ const deleteUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${idsToDelete}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);
@@ -194,7 +194,7 @@ const archiveUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${selectedIDs}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json(users);
@@ -204,7 +204,7 @@ const archiveUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${selectedIDs}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error.message);
@@ -225,7 +225,7 @@ const getUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${id}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(user);
   } catch (err) {
@@ -234,7 +234,7 @@ const getUser = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `User ID: ${id}` || "unknown",
       module: "User Management",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error(err);

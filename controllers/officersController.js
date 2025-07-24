@@ -30,7 +30,7 @@ const getAllOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF OFFICERS",
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (error) {
@@ -39,7 +39,7 @@ const getAllOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF OFFICERS",
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(400).json({ message: error.message });
@@ -71,7 +71,7 @@ const addOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Officer ID: ${newOfficer._id}`,
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.status(201).json(newOfficer);
@@ -81,7 +81,7 @@ const addOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "new officer",
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);
@@ -112,7 +112,7 @@ const updateOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Officer ID: ${officerInfo?._id}` || "unknown",
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.status(201).json(updatedOfficer);
   } catch (error) {
@@ -121,7 +121,7 @@ const updateOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Officer ${officerInfo?._id}` || "unknown",
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);
@@ -138,7 +138,7 @@ const deleteOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Officer ID: ${req.body.id}` || "unknown",
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.sendStatus(204);
   } catch (error) {
@@ -147,7 +147,7 @@ const deleteOfficer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Officer ID: ${req.body.id}` || "unknown",
       module: "Officer",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);

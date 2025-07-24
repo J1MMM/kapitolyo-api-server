@@ -12,7 +12,7 @@ const getAllTickets = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "All Tickets" || "unknown",
       module: "Released TCT",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (error) {
@@ -21,7 +21,7 @@ const getAllTickets = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "All Tickets" || "unknown",
       module: "Released TCT",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error(error);
@@ -41,7 +41,7 @@ const addTicket = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Ticket ID: ${result._id}` || "unknown",
       module: "Released TCT",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.status(201).json(result);
   } catch (error) {
@@ -50,7 +50,7 @@ const addTicket = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Ticket ID: ${result._id}` || "unknown",
       module: "Released TCT",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);
@@ -72,7 +72,7 @@ const updateTicket = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Ticket ID: ${ticketDetails._id}` || "unknown",
       module: "Released TCT",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
     });
     res.status(201).json(result);
   } catch (error) {
@@ -81,7 +81,7 @@ const updateTicket = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Ticket ID: ${ticketDetails._id}` || "unknown",
       module: "Released TCT",
-      ip: req.ip || req.headers.origin || "unknown",
+      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);

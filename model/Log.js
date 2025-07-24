@@ -12,7 +12,7 @@ const logSchema = new mongoose.Schema({
   module: String,
   status: {
     type: String,
-    enum: ["SUCCESS", "FAILED"],
+    enum: ["SUCCESS", "FAILED", "WARNING"],
     default: "SUCCESS",
   },
 });
