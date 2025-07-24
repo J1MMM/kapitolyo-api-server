@@ -1,40 +1,110 @@
-# TRICYCLE FRANCHISING AND RENEWAL SYSTEM
+# 🚀 Tricycle Franchising and Renewal System – Backend
 
-## Introduction
-The TRICYCLE FRANCHISING AND RENEWAL SYSTEM is a comprehensive web-based application designed to facilitate the management of tricycle franchise information. It offers features for efficiently handling franchise applications, renewals, and related data.
+This repository contains the **backend API** for the Tricycle Franchising and Renewal System, developed using **Node.js**, **Express**, and **MongoDB**.
 
-## Features
-- Streamlined management of tricycle franchise applications
-- Enhanced process for renewing existing franchises
-- User-friendly interface for inputting and updating franchise details
-- Search and filter functionality for easy access to specific records
-- Secure authentication system to protect sensitive information
+The backend handles all business logic, authentication, and data management related to tricycle franchises, MTOP issuance, and system users.
 
-## Getting Started
-To set up and run the TRICYCLE FRANCHISING AND RENEWAL SYSTEM locally, follow these steps:
-1. Clone this repository to your local machine.
-2. Install the necessary dependencies using npm or yarn.
-3. Configure the database connection settings according to your environment.
-4. Run the application using the provided npm or yarn scripts.
+---
 
-## Usage
-1. Access the login page and authenticate using valid credentials.
-2. Navigate to the dashboard to view an overview of franchise applications and renewals.
-3. Utilize the provided forms and interfaces to add, edit, or delete franchise information as needed.
-4. Take advantage of the search and filter options to quickly find specific franchise records.
+## 📌 Features
 
-## Configuration
-- Ensure that the database connection settings are correctly configured in the application.
-- Adjust any environment variables or configuration files as required for your environment setup.
+- 🔐 **Authentication & Authorization**
+  - JWT-based secure login and route protection
+- 👥 **Role-Based Access Control**
+  - Admin, Staff, Encoder support
+- 📝 **Franchise & Permit Handling**
+  - Create, update, renew, archive tricycle franchises
+- 🧾 **MTOP Management**
+  - Availability tracking and issuance
+- 🧹 **Soft Deletes & Archiving**
+  - For audit trail and data recovery
+- 📄 **Email Notifications**
+  - Via Nodemailer for status updates (if enabled)
+- 🔍 **Advanced Filtering (Server-Side)**
+  - Operators: `contains`, `equals`, `startsWith`, `endsWith`, etc.
+- 📦 **RESTful API Design**
+  - Clean structure and modular routes
 
-## Contributing
-We welcome contributions from the community! If you'd like to contribute to the TRICYCLE FRANCHISING AND RENEWAL SYSTEM, please follow these guidelines:
-1. Fork the repository and create a new branch for your feature or fix.
-2. Implement your changes, adhering to the project's coding standards and conventions.
-3. Submit a pull request detailing your modifications and explaining their purpose.
+---
 
-## Credits
-- Developed by OJT sa Kapitolyo
+## 🧰 Tech Stack
 
-## Contact
-For inquiries, feedback, or support, please contact jimuelbaraero00@gmail.com.
+| Purpose          | Library / Tool                                                               |
+| ---------------- | ---------------------------------------------------------------------------- |
+| Server Framework | [Express](https://expressjs.com/)                                            |
+| Database         | [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/) |
+| Authentication   | `jsonwebtoken`, `bcrypt`                                                     |
+| Environment Vars | `dotenv`                                                                     |
+| Date Utilities   | `date-fns`, `dayjs`                                                          |
+| Email Sending    | `nodemailer`                                                                 |
+| CORS Handling    | `cors`                                                                       |
+| Logging & Debug  | `nodemon` (dev)                                                              |
+| UUID Generation  | `uuid`                                                                       |
+
+---
+
+## 📁 Project Structure
+
+```
+kapitolyo-api-server/
+├── controllers/      # Logic for each route group (e.g. auth, franchise)
+├── middleware/       # Auth and error middleware
+├── models/           # Mongoose schemas
+├── routes/           # Route definitions
+├── utils/            # Reusable functions (validators, constants)
+├── config/           # DB and env config
+├── server.js         # Entry point
+└── .env              # Environment variables
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16+)
+- MongoDB (local or cloud)
+- npm
+
+### Setup Instructions
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/kapitolyo-api-server.git
+cd kapitolyo-api-server
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a `.env` file:
+
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+```
+
+4. Run in development:
+
+```bash
+npm run dev
+```
+
+---
+
+## 📄 License
+
+This project is proprietary and developed for internal use by the City Government of San Pablo.
+
+---
+
+## 👨‍💻 Author
+
+Developed by **Jimuel N. Baraero**  
+Web Developer - City Government of San Pablo
