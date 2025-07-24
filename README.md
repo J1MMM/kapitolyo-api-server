@@ -19,7 +19,7 @@ The backend handles all business logic, authentication, and data management rela
 - 🧹 **Soft Deletes & Archiving**
   - For audit trail and data recovery
 - 📄 **Email Notifications**
-  - Via Nodemailer for status updates (if enabled)
+  - Via Nodemailer for status updates
 - 🔍 **Advanced Filtering (Server-Side)**
   - Operators: `contains`, `equals`, `startsWith`, `endsWith`, etc.
 - 📦 **RESTful API Design**
@@ -72,7 +72,7 @@ kapitolyo-api-server/
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/kapitolyo-api-server.git
+git clone https://github.com/J1MMM/kapitolyo-api-server.git
 cd kapitolyo-api-server
 ```
 
