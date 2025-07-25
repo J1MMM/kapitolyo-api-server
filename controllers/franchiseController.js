@@ -242,7 +242,7 @@ const getAllAvailableMTOPs = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "Available MTOPs",
       module: "Dashboard",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     // Return the array of missing MTOP numbers as JSON response
     return res.json(missingMTOPs);
