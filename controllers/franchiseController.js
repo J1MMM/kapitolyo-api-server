@@ -155,7 +155,7 @@ const getAllArchived = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "All Archived Franchises",
       module: "Archived Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json({ rows, totalRows });
@@ -165,7 +165,7 @@ const getAllArchived = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "All Archived Franchises",
       module: "Archived Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error fetching data:", err);
@@ -197,7 +197,7 @@ const archiveFranchise = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json(updatedFranchise);
@@ -207,7 +207,7 @@ const archiveFranchise = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error updating franchise:", error);
@@ -252,7 +252,7 @@ const getAllAvailableMTOPs = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "Available MTOPs",
       module: "Dashboard",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error getting missing MTOPs:", error);
@@ -382,7 +382,7 @@ const addNewFranchise = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${newFranchise._id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.status(201).json(latestRefNo);
@@ -392,7 +392,7 @@ const addNewFranchise = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${req.body?.id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error adding new franchise:", error);
@@ -533,7 +533,7 @@ const handleFranchiseTransfer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${newFranchise._id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.status(201).json({ refNo, receiptData });
@@ -543,7 +543,7 @@ const handleFranchiseTransfer = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${req.body?.id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error transfering franchise:", error);
@@ -818,7 +818,7 @@ const handleFranchiseUpdate = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${franchiseDetails?.id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json({ refNo, receiptData });
@@ -828,7 +828,7 @@ const handleFranchiseUpdate = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${req.body?.id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error updating franchise:", error);
@@ -896,7 +896,7 @@ const getAnalytics = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "FRANCHISE OVERVIEW",
       module: "DASHBOARD",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json({
@@ -911,7 +911,7 @@ const getAnalytics = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "FRANCHISE OVERVIEW",
       module: "DASHBOARD",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error fetching data:", err);
@@ -927,7 +927,7 @@ const getFranchisePending = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `ALL PENDING FRANCHISES`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (err) {
@@ -936,7 +936,7 @@ const getFranchisePending = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `ALL PENDING FRANCHISES`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error fetching data:", err);
@@ -954,7 +954,7 @@ const getFranchisePendingPaid = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `ALL PAID FRANCHISES`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (err) {
@@ -963,7 +963,7 @@ const getFranchisePendingPaid = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `ALL PAID FRANCHISES`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error fetching data:", err);
@@ -1093,7 +1093,7 @@ const pendingFranchisePayment = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${franchiseDetails?.id}`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json({ newFranchiseData, receiptData: foundPending?.receiptData });
@@ -1103,7 +1103,7 @@ const pendingFranchisePayment = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${req.body?.id}`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error fetching data:", err);
@@ -1137,7 +1137,7 @@ const cancelOR = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${franchiseDetails?.id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json({ message: "ok" });
   } catch (err) {
@@ -1146,7 +1146,7 @@ const cancelOR = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${franchiseDetails?.id}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error fetching data:", err);
@@ -1180,7 +1180,7 @@ const cashierCancelPending = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${franchiseDetails?.id}`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json({ message: "ok" });
   } catch (err) {
@@ -1189,7 +1189,7 @@ const cashierCancelPending = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Franchise ID: ${franchiseDetails?.id}`,
       module: "Cashier",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error("Error fetching data:", err);
@@ -1411,7 +1411,7 @@ const fetchFranchise = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Page: ${page}, Rows: ${pageSize}`,
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.json({
@@ -1427,7 +1427,7 @@ const fetchFranchise = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF FRANCHISES",
       module: "Franchise",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(500).json({ message: "Internal server error" });

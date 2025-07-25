@@ -50,7 +50,7 @@ const getViolationList = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF VIOLATION",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (error) {
@@ -59,7 +59,7 @@ const getViolationList = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF VIOLATION",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(400).json({ message: error.message });
@@ -76,7 +76,7 @@ const getViolations = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF ALL VIOLATIONS",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (error) {
@@ -85,7 +85,7 @@ const getViolations = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF ALL VIOLATIONS",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(400).json({ message: error.message });
@@ -141,7 +141,7 @@ const addViolator = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Violation ID: ${newViolator._id}` || "unknown",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.status(201).json(newViolator);
@@ -151,7 +151,7 @@ const addViolator = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Violation Ticket No: ${violationDetails?.ticketNo}` || "unknown",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error);
@@ -277,7 +277,7 @@ const updateViolation = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Violation ID: ${prevViolationDetails._id}` || "unknown",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
 
     res.status(201).json(prevViolationDetails);
@@ -287,7 +287,7 @@ const updateViolation = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: `Violation ID: ${violationDetails._id}` || "unknown",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.error(error);
@@ -305,7 +305,7 @@ const getViolationsPaid = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF PAID VIOLATIONS",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json(result);
   } catch (error) {
@@ -314,7 +314,7 @@ const getViolationsPaid = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "LIST OF PAID VIOLATIONS",
       module: "Violation",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(400).json({ message: error.message });
@@ -379,7 +379,7 @@ const updateViolationPaidStatus = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "Violation ID: " + violationDetails._id || "unknown",
       module: "Violation Paidlist",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.sendStatus(201);
   } catch (error) {
@@ -388,7 +388,7 @@ const updateViolationPaidStatus = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "Violation ID: " + violationDetails._id || "unknown",
       module: "Violation Paidlist",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     res.status(400).json({ message: error.message });
@@ -468,7 +468,7 @@ const violationsAnalytics = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "VIOLATIONS ANALYTICS",
       module: "Dashboard",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
     });
     res.json({
       registered,
@@ -487,7 +487,7 @@ const violationsAnalytics = async (req, res) => {
       performedBy: req?.fullname || "unknown",
       target: "VIOLATIONS ANALYTICS",
       module: "Dashboard",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "FAILED",
     });
     console.log(error.message);

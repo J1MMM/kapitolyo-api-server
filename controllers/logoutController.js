@@ -17,7 +17,7 @@ const handleLogout = async (req, res) => {
         performedBy: `Unknown (token: ${refreshToken})`,
         target: "LOGOUT",
         module: "Logout",
-        ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+        ip: req.headers["x-forwarded-for"] || "unknown",
         status: "FAILED",
       });
 
@@ -39,7 +39,7 @@ const handleLogout = async (req, res) => {
       performedBy: `${foundUser.firstname} ${foundUser.lastname}` || "unknown",
       target: "LOGOUT",
       module: "Logout",
-      ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+      ip: req.headers["x-forwarded-for"] || "unknown",
       status: "SUCCESS",
     });
 

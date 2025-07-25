@@ -39,7 +39,7 @@ const handleRefreshToken = async (req, res) => {
         performedBy: fullname || "unknown",
         target: "REFRESH_TOKEN",
         module: "Refresh",
-        ip: req.ip || req.headers["x-forwarded-for"] || "unknown",
+        ip: req.headers["x-forwarded-for"] || "unknown",
       });
 
       res.json({ accessToken, roles, fullname, email });
