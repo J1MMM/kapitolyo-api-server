@@ -972,8 +972,9 @@ const getFranchisePendingPaid = async (req, res) => {
 };
 
 const pendingFranchisePayment = async (req, res) => {
+  const franchiseDetails = req.body;
+
   try {
-    const franchiseDetails = req.body;
     if (!franchiseDetails)
       return res
         .status(400)
@@ -983,7 +984,8 @@ const pendingFranchisePayment = async (req, res) => {
       _id: franchiseDetails.id,
     });
 
-    if (!foundPending) res.status(404).json({ message: "record not found" });
+    if (!foundPending)
+      return res.status(404).json({ message: "record not found" });
 
     let newFranchiseData;
     const dateNow = dayjs().tz("Asia/Kuala_Lumpur");
@@ -1053,7 +1055,7 @@ const pendingFranchisePayment = async (req, res) => {
         isArchived: false,
       });
 
-      await foundFranchise.set({
+      foundFranchise.set({
         ...franchiseObj,
         MPreceiptData: foundPending?.receiptData,
         MPpaymentOr: franchiseDetails?.paymentOr,
