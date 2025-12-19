@@ -106,5 +106,5 @@ This project is proprietary and developed for internal use by the City Governmen
 
 ## 👨‍💻 Author
 
-Developed by **Jimuel N. Baraero**  
+Developed by 
 Web Developer - City Government of San Pablo
